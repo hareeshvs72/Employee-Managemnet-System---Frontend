@@ -12,6 +12,7 @@ import Attendence from './Pages/Attendence'
 import Leave from './Pages/Leave'
 import Payslip from './Pages/Payslip'
 import Settings from './Pages/Settings'
+import Employee from './Pages/Employee'
 
 function App() {
 
@@ -30,6 +31,7 @@ function App() {
           <Route path='/payslip' element={<Payslip />} />
 
           <Route path='/settings' element={<Settings />} />
+                   <Route path='/employee' element={<Employee />} />
 
 
 
