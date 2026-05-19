@@ -29,12 +29,12 @@ function LoginLanding() {
                         Select Your Portal To Securely Access The System
                     </p>
 
-                    <button onClick={()=>{navigate('/admin-portal')}} className="py-5 mt-3 px-5 flex justify-between items-center bg-[rgba(248,250,252,1)] text-black border border-[rgba(226,232,240,1)] mb-2 w-full max-w-sm hover:bg-gray-100 transition-all duration-200 rounded-xl font-semibold">
+                    <button onClick={()=>{navigate('/admin')}} className="py-5 mt-3 px-5 flex justify-between items-center bg-[rgba(248,250,252,1)] text-black border border-[rgba(226,232,240,1)] mb-2 w-full max-w-sm hover:bg-gray-100 transition-all duration-200 rounded-xl font-semibold">
                         <p>Admin Portal</p>
                         <span><i class="fa-solid fa-angle-right"></i></span>
                     </button>
 
-                    <button onClick={()=>navigate('/employee-portal')} className="py-5 mt-3 px-5 flex justify-between items-center bg-[rgba(248,250,252,1)] text-black border border-[rgba(226,232,240,1)] mb-2 w-full max-w-sm hover:bg-gray-100 transition-all duration-200 rounded-xl font-semibold">
+                    <button onClick={()=>navigate('/employee')} className="py-5 mt-3 px-5 flex justify-between items-center bg-[rgba(248,250,252,1)] text-black border border-[rgba(226,232,240,1)] mb-2 w-full max-w-sm hover:bg-gray-100 transition-all duration-200 rounded-xl font-semibold">
                         <p>Employee Portal</p>
                         <span><i class="fa-solid fa-angle-right"></i></span>
                     </button>

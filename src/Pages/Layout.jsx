@@ -1,8 +1,13 @@
 import React from 'react'
 import Sidebard from '../components/Sidebard'
-import { Outlet } from 'react-router-dom'
+import { Navigate, Outlet, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Layout() {
+  const {user,loading ,token} =useAuth()
+  const navigate = useNavigate()
+  if(loading) return <p>Loading</p>
+  if(!token) return <Navigate to="/login"/>
   return (
     <div className='flex'>
       

@@ -55,7 +55,7 @@ export default function Employee() {
             <h1 className="text-2xl font-bold text-slate-900">Employees</h1>
             <p className="text-slate-500 text-sm">Manage your team members and their roles</p>
           </div>
-          <button onClick={()=>{setIsOpen(true)}} className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm active:scale-95">
+          <button onClick={() => { setIsOpen(true) }} className="flex items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl font-medium transition-all shadow-sm active:scale-95">
             <Plus size={20} />
             Add Employee
           </button>
@@ -161,8 +161,8 @@ export default function Employee() {
         </div>
       </div>
 
-      {isOpen && <AddEmployee setIsOpen={setIsOpen}/>}
+      {isOpen && <AddEmployee setIsOpen={setIsOpen} />}
     </div>
   );
-  
+
 }

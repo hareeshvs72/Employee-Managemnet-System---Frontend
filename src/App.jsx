@@ -19,11 +19,11 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path='/' element={<LoginLanding />} />
-        <Route path='/admin-portal' element={<LoginMain />} />
-        <Route path='/employee-portal' element={<LoginMain />} />
+        <Route path='/login' element={<LoginLanding />} />
+        <Route path='/Admin' element={<LoginMain />} />
+        <Route path='/Employee' element={<LoginMain />} />
         <Route element={<Layout />}>
-          <Route path='/dashbord' element={<Dashbord />} />
+          <Route path='/' element={<Dashbord />} />
           <Route path='/attendence' element={<Attendence />} />
 
           <Route path='/leave' element={<Leave />} />
@@ -31,7 +31,7 @@ function App() {
           <Route path='/payslip' element={<Payslip />} />
 
           <Route path='/settings' element={<Settings />} />
-                   <Route path='/employee' element={<Employee />} />
+                   <Route path='/employees' element={<Employee />} />
 
 
 

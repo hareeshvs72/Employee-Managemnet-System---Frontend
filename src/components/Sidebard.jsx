@@ -1,20 +1,22 @@
 import React, { useState } from 'react'
 import { NavLink, useLocation } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 
 function Sidebard() {
+    const {logOut,user} = useAuth()
     const [userDetails, setUserDetails] = useState({
         username: "jhon",
         designation: "employee"
     })
     const sidebarDetails = [
-        { title: "Dashbord", icon: <i class="fa-brands fa-dashcube"></i>, href: "/dashbord" },
-        { title: "Attendence", icon: <i class="fa-solid fa-calendar-day"></i>, href: "/attendence" },
+        { title: "Dashbord", icon: <i class="fa-brands fa-dashcube"></i>, href: "/" },
+        user.role !== "Admin" ?
+        { title: "Attendence", icon: <i class="fa-solid fa-calendar-day"></i>, href: "/attendence" } :
+                { title: "Employees", icon: <i class="fa-regular fa-clipboard"></i>, href: "/employees" },
+
         { title: "Leave", icon: <i class="fa-regular fa-clipboard"></i>, href: "/leave" },
         { title: "Payslip", icon: <i class="fa-solid fa-dollar-sign"></i>, href: "/payslip" },
         { title: "Settings", icon:<i class="fa-solid fa-gear"></i>, href: "/settings" }
-
-
-
 
     ]
     const { pathname } = useLocation()
@@ -76,7 +78,7 @@ function Sidebard() {
                 <hr className='border-white/10 my-3' />
 
 
-                <button className='w-full flex items-center justify-center gap-2 px-4 py-2 hover:bg-red-500/10 hover:text-red-400 rounded-md transition'>
+                <button onClick={logOut} className='w-full flex items-center justify-center gap-2 px-4 py-2 hover:bg-red-500/10 hover:text-red-400 rounded-md transition'>
                     <i className="fa-solid fa-right-from-bracket"></i>
                     <span className='tracking-widest'>  Logout</span>
                 </button>
