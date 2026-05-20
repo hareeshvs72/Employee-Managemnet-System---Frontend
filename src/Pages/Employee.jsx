@@ -14,37 +14,78 @@ import {
   ChevronDown
 } from 'lucide-react';
 import AddEmployee from '../components/AddEmployee';
+import api from '../services/axios';
+import { useEffect } from 'react';
 
 
 
 
 export default function Employee() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedEmployee,setSellectedEmployee] = useState(null)
+  const [employees, setEmployees] = useState([]);
   const [selectedDept, setSelectedDept] = useState("All Departments");
-  const [employees, setEmployees] = useState(initialEmployees);
-  const [isOpen, setIsOpen] = useState(true);
-
+  const [isOpen, setIsOpen] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+const [id,setId] = useState(null)
+  //  const [department ,setDepartent] = useState(null)
   // Get unique departments for the dropdown
   const departments = useMemo(() => {
-    const depts = new Set(initialEmployees.map(emp => emp.dept));
+    const depts = new Set(employees.map(emp => emp?.department));
     return ["All Departments", ...Array.from(depts)];
   }, []);
+ const handleDelete = async (id) => {
+  try {
+    const {data} = await api.delete(`/employees/${id}`)
+    console.log(data);
+    
+  } catch (error) {
+    console.log(error);
+    
+  }
+ }
+  const handileGetAllEmployee = async () => {
+    try {
+      setLoading(true)
+      let url = "/employees";
+
+      if (selectedDept !== "All Departments") {
+        url += `?department=${selectedDept}`;
+      }
+
+      const result = await api.get(url);
+
+      console.log(result);
+      setEmployees(result?.data || [])
+    } catch (error) {
+      console.log(error);
+
+    } finally {
+      setLoading(false)
+    }
+  }
+  useEffect(() => {
+    handileGetAllEmployee()
+  }, [selectedDept,id])
 
   // Filter logic for the search bar AND department dropdown
   const filteredEmployees = useMemo(() => {
     return employees.filter(emp => {
-      const matchesSearch = emp.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        emp.role.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesDept = selectedDept === "All Departments" || emp.dept === selectedDept;
+   const matchesSearch =
+  emp.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+  emp.position?.toLowerCase().includes(searchTerm.toLowerCase());
+
+      const matchesDept =
+        selectedDept === "All Departments" || emp.department === selectedDept;
 
       return matchesSearch && matchesDept;
     });
   }, [searchTerm, selectedDept, employees]);
 
-  const handleDelete = (id) => {
-    setEmployees(prev => prev.filter(e => e.id !== id));
-  };
 
+  if(loading) return <p>loading</p>
+  if(error) return <p>Failed To Fetch Data</p>
   return (
     <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 font-sans">
       <div className="max-w-7xl mx-auto">
@@ -97,31 +138,32 @@ export default function Employee() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredEmployees.map((emp) => (
             <div
-              key={emp.id}
+              key={emp._id}
               className="group relative bg-white border border-slate-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
             >
               {/* Upper Section (Gray area with Tag & Avatar) */}
               <div className="h-44 bg-[#F1F5F9] p-4 flex flex-col items-center justify-center relative">
                 {/* Department Tag */}
                 <span className="absolute top-4 left-4 bg-white/80 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full text-slate-600 shadow-sm border border-slate-100">
-                  {emp.dept}
+                  {emp.department}
                 </span>
 
                 {/* Avatar Circle */}
-                <div className={`w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold ${emp.color} shadow-inner`}>
-                  {emp.initials}
+                <div className={`w-24 h-24 rounded-full flex items-center justify-center text-3xl font-bold bg-blue-100 text-blue-600 shadow-inner`}>
+                  {emp.firstName?.slice(0, 2).toUpperCase() || "NA" }
                 </div>
 
                 {/* HOVER ACTIONS OVERLAY */}
                 <div className="absolute inset-0 bg-slate-900/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 backdrop-blur-[2px]">
-                  <button
+                  <button 
+                  onClick={()=>{setId(emp._id ); setIsOpen(true);setSellectedEmployee(emp)}}
                     title="Edit Employee"
                     className="p-3 bg-white text-indigo-600 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all"
                   >
-                    <Pencil size={20} />
+                    <Pencil size={20}  />
                   </button>
                   <button
-                    onClick={() => handleDelete(emp.id)}
+                    onClick={() => handleDelete(emp._id)}
                     title="Delete Employee"
                     className="p-3 bg-white text-red-500 rounded-full shadow-lg hover:scale-110 active:scale-95 transition-all"
                   >
@@ -134,8 +176,8 @@ export default function Employee() {
               <div className="p-5">
                 <div className="flex justify-between items-start">
                   <div className="pb-2">
-                    <h3 className="text-lg font-bold text-slate-800 leading-tight">{emp.name}</h3>
-                    <p className="text-sm text-slate-500 mt-1 font-medium">{emp.role}</p>
+                    <h3 className="text-lg font-bold text-slate-800 leading-tight">{emp.firstName}</h3>
+                    <p className="text-sm text-slate-500 mt-1 font-medium">{emp.position}</p>
                   </div>
                   <button className="text-slate-300 hover:text-slate-500 transition-colors">
                     <MoreVertical size={18} />
@@ -161,7 +203,7 @@ export default function Employee() {
         </div>
       </div>
 
-      {isOpen && <AddEmployee setIsOpen={setIsOpen} />}
+      {isOpen && <AddEmployee setIsOpen={setIsOpen} id={id} setId={setId} selectedEmployee={selectedEmployee} setSellectedEmployee={setSellectedEmployee} />}
     </div>
   );
 
