@@ -34,7 +34,7 @@ const [id,setId] = useState(null)
   const departments = useMemo(() => {
     const depts = new Set(employees.map(emp => emp?.department));
     return ["All Departments", ...Array.from(depts)];
-  }, []);
+  }, [employees]);
  const handleDelete = async (id) => {
   try {
     const {data} = await api.delete(`/employees/${id}`)
@@ -43,7 +43,7 @@ const [id,setId] = useState(null)
   } catch (error) {
     console.log(error);
     
-  }
+  } 
  }
   const handileGetAllEmployee = async () => {
     try {
