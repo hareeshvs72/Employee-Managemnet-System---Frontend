@@ -1,22 +1,49 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Download, FileText, ChevronRight, User, Bell, LogOut } from 'lucide-react';
 import GeneratePayslip from '../components/GeneratePayslip';
+import { useAuth } from '../context/AuthContext';
+import api from '../services/axios';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Payslip = () => {
   // Mock data representing the payslip history
-  const [isAdmin,setIsAdmin]= useState(true)
-  const [isOpen, setIsOpen] = useState(true);
-  const [payslips] = useState([
-    { id: 1, period: 'January 2026', basicSalary: 1000, netSalary: 1000 },
-    { id: 2, period: 'December 2025', basicSalary: 1000, netSalary: 1000 },
-    { id: 3, period: 'November 2025', basicSalary: 1000, netSalary: 1000 },
-  ]);
+ const navigate = useNavigate()
+  const [isOpen, setIsOpen] = useState(false);
+  const [payslips,setPayslip] = useState([]);
+  const [loading,setLoading] = useState(false)
+   const {user} = useAuth()
+ 
+  const isAdmin = user.role
+  
+  const handileGetAllPaySlip = async () => {
+    try {
+      setLoading(true)
 
-  const handleDownload = (period) => {
-    // In a real Payslip, this would trigger a PDF generation or download link
-    console.log(`Downloading payslip for ${period}`);
-  };
+      const {data} = await  api.get("/payslips")
+      setPayslip(data.data || [])
+      console.log(data.data);
+
+    } catch (error) {
+      console.log(error);
+        
+    }finally{
+      setLoading(false)
+    }
+  }
+
+  const getMonthYear = (month, year) => {
+  const date = new Date(year, month - 1);
+
+  return date.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+};
+
+  useEffect(()=>{
+    handileGetAllPaySlip()
+  },[isOpen])
 
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
@@ -49,16 +76,16 @@ const Payslip = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50">
-                {payslips.map((slip) => (
+                {payslips?.map((slip) => (
                   <tr 
-                    key={slip.id} 
+                    key={slip._id} 
                     className="hover:bg-slate-50/30 transition-colors group"
                   >
                     {isAdmin && <td className="px-6 py-5 text-sm font-medium text-slate-600">
-                     emply name
+                     {slip.employeeId.firstName}
                     </td>}
                     <td className="px-6 py-5 text-sm font-medium text-slate-600">
-                      {slip.period}
+                     {getMonthYear(slip.month, slip.year)}
                     </td>
                     <td className="px-6 py-5 text-sm text-slate-500">
                       ${slip.basicSalary.toLocaleString()}
@@ -67,8 +94,8 @@ const Payslip = () => {
                       ${slip.netSalary.toLocaleString()}
                     </td>
                     <td className="px-6 py-5 text-right">
-                      <button 
-                        onClick={() => handleDownload(slip.period)}
+                      <button  to={`/payslips/${slip._id}`}
+                        onClick={() => {navigate(`/payslip/${slip?._id}`)}}
                         className="inline-flex items-center gap-2 px-4 py-2 bg-[#eff6ff] text-blue-600 rounded-lg text-xs font-semibold hover:bg-blue-600 hover:text-white transition-all active:scale-95 border border-transparent"
                       >
                         <Download className="w-3.5 h-3.5" />
@@ -77,6 +104,7 @@ const Payslip = () => {
                     </td>
                   </tr>
                 ))}
+                
               </tbody>
             </table>
           </div>

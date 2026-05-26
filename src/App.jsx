@@ -13,6 +13,7 @@ import Leave from './Pages/Leave'
 import Payslip from './Pages/Payslip'
 import Settings from './Pages/Settings'
 import Employee from './Pages/Employee'
+import PayslipDownload from './components/PayslipDownload'
 
 function App() {
 
@@ -22,6 +23,7 @@ function App() {
         <Route path='/login' element={<LoginLanding />} />
         <Route path='/Admin' element={<LoginMain />} />
         <Route path='/Employee' element={<LoginMain />} />
+        <Route path='/payslip/:id' element={<PayslipDownload />} />
         <Route element={<Layout />}>
           <Route path='/' element={<Dashbord />} />
           <Route path='/attendence' element={<Attendence />} />
