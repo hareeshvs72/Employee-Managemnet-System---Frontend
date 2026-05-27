@@ -8,97 +8,117 @@ import {
   CheckCircle2,
   UserCircle
 } from 'lucide-react';
+import api from '../services/axios';
 
 const Attendence = () => {
   const [isClockedIn, setIsClockedIn] = useState(false);
   const [records, setRecords] = useState([]);
+  const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState({
     daysPresent: 0,
     lateArrivals: 0,
-    avgWorkHrs: 8.5
+    avgWorkHrs: 0
   });
 
-  // Calculate stats based on records
-  useEffect(() => {
-    const present = records.length;
-    const late = records.filter(r => {
-      const checkInHour = parseInt(r.checkIn.split(':')[0]);
-      return checkInHour >= 9 && parseInt(r.checkIn.split(':')[1]) > 0; // Assuming 9:00 AM is late
-    }).length;
+  // ✅ FETCH ATTENDENCE
+  const fetchAttendence = async () => {
+    try {
+      const res = await api.get('/attendence');
 
-    setStats(prev => ({
-      ...prev,
-      daysPresent: present,
-      lateArrivals: late
-    }));
-  }, [records]);
+      const data = res.data.data || [];
+      console.log(data);
+      
 
-const calculateWorkingHours = (checkIn, checkOut) => {
-  const inTime = new Date(`2024-01-01T${checkIn}`);
-  let outTime = new Date(`2024-01-01T${checkOut}`);
+      const formatted = data.map(item => ({
+        id: item._id,
+        date: new Date(item.date).toLocaleDateString(),
+        checkIn: item.checkIn
+          ? new Date(item.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : '-',
+        checkOut: item.checkOut
+          ? new Date(item.checkOut).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          : '-',
+        workingHours: item.workingHours || '-',
+        dayType: item.dayType || '-',
+        status: item.status
+      }));
 
-  if (outTime < inTime) {
-    outTime.setDate(outTime.getDate() + 1);
-  }
+      setRecords(formatted);
 
-  const diffMs = outTime - inTime;
+      const today = new Date().toDateString();
 
-  const hours = diffMs / (1000 * 60 * 60);
-  const displayHours = Math.floor(hours);
-  const minutes = Math.floor((hours % 1) * 60);
+      const todayRecord = data.find(d =>
+        new Date(d.date).toDateString() === today
+      );
 
-  return {
-    totalHours: hours,
-    formatted: `${displayHours}h ${minutes}m`
-  };
-};
-
-  const handleClockToggle = () => {
-    const now = new Date();
-    const timeString = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit',hour12:false });
-    const dateString = now.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
-
-    if (!isClockedIn) {
-      // Clocking In
-      setIsClockedIn(true);
-      const newRecord = {
-        id: Date.now(),
-        date: dateString,
-        checkIn: timeString,
-        checkOut: '-',
-        workingHours: '-',
-        dayType: 'Regular',
-        status: 'On Duty'
-      };
-      setRecords([newRecord, ...records]);
-    } else {
-      // Clocking Out
-      setIsClockedIn(false);
-   setRecords(prev =>
-  prev.map((rec, index) => {
-    if (index === 0 && rec.checkOut === '-') {
-      const result = calculateWorkingHours(rec.checkIn, timeString);
-
-      let dayType = "Absent";
-      if (result.totalHours >= 8) {
-        dayType = "Regular";
-      } else if (result.totalHours >= 4) {
-        dayType = "Half Day";
+      if (todayRecord && !todayRecord.checkOut) {
+        setIsClockedIn(true);
+      } else {
+        setIsClockedIn(false);
       }
 
-      return {
-        ...rec,
-        checkOut: timeString,
-        workingHours: result.formatted,
-        dayType: dayType,
-        status: 'Completed'
-      };
-    }
-    return rec;
-  })
-);
+    } catch (err) {
+      console.log(err);
     }
   };
+
+  // ✅ CLOCK IN / OUT
+  // const handleClockToggle = async () => {
+  //   if (loading) return; // prevent double click
+
+  //   try {
+  //     setLoading(true);
+
+  //     const res = await api.post('/attendence');
+
+  //     if (res.data.success) {
+  //       // ✅ Optimistic update (instant UI change)
+  //       setIsClockedIn(prev => !prev);
+
+  //       await fetchAttendence(); // sync with backend
+  //     }
+
+  //   } catch (err) {
+  //     console.log(err);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+const handleClockToggle = async () => {
+  try {
+    const res = await api.post('/attendence');
+  console.log(res);
+  
+    if (res.data.success) {
+      setIsClockedIn(prev => !prev); // instant toggle
+      await fetchAttendence();       // sync with backend
+    }
+
+  } catch (err) {
+    console.log(err);
+  }
+};
+  // ✅ INITIAL LOAD
+  useEffect(() => {
+    fetchAttendence();
+  }, []);
+
+  // ✅ STATS CALCULATION
+  useEffect(() => {
+    const present = records.length;
+
+    const late = records.filter(r => r.status === "Late").length;
+
+    const avg =
+      records.reduce((acc, r) => acc + (parseFloat(r.workingHours) || 0), 0) /
+      (records.length || 1);
+
+    setStats({
+      daysPresent: present,
+      lateArrivals: late,
+      avgWorkHrs: avg.toFixed(1)
+    });
+  }, [records]);
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-800">
@@ -175,7 +195,7 @@ const calculateWorkingHours = (checkIn, checkOut) => {
                   </tr>
                 ) : (
                   records.map((record) => (
-                    <tr key={record.id} className="text-sm hover:bg-slate-50 transition-colors">
+                    <tr key={record._id} className="text-sm hover:bg-slate-50 transition-colors">
                       <td className="px-6 py-4 text-slate-600 font-medium">{record.date}</td>
                       <td className="px-6 py-4 text-slate-600">{record.checkIn}</td>
                       <td className="px-6 py-4 text-slate-600">{record.checkOut}</td>
@@ -203,6 +223,7 @@ const calculateWorkingHours = (checkIn, checkOut) => {
 
         {/* Floating Action Button */}
         <button
+         disabled={loading}
           onClick={handleClockToggle}
           className={`fixed bottom-8 right-8 flex items-center gap-4 px-6 py-4 rounded-2xl shadow-2xl transition-all active:scale-95 group ${isClockedIn
             ? 'bg-rose-600 hover:bg-rose-700'

@@ -56,7 +56,7 @@ const Payslip = () => {
             <h1 className="text-3xl font-bold text-slate-900 mb-1">Payslips</h1>
             <p className="text-slate-500">Your payslip history</p>
           </div>
-      {isAdmin &&     <button onClick={()=>setIsOpen(true)} className="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md 
+      {isAdmin === "Admin" &&     <button onClick={()=>setIsOpen(true)} className="px-6 py-3 bg-indigo-600 text-white rounded-lg shadow-md 
                    hover:bg-indigo-700 active:scale-95 transition duration-200">
   Generate Payslip
 </button>}
