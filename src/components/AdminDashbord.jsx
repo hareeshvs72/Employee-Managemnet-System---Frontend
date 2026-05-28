@@ -1,25 +1,25 @@
 import React from 'react'
 
-function AdminDashbord() {
+function AdminDashbord({data}) {
     const cards = [
         {
             title: "Total Employees",
-            count: "3",
+            count: data?.totalEmployees,
             icons: <i className="fa-solid fa-user-group"></i>
         },
         {
             title: "Departments",
-            count: "10",
+            count:  data?.totalDepartments,
             icons: <i className="fa-solid fa-building"></i>
         },
         {
             title: "Total Attendance",
-            count: "1",
+            count:  data?.totalAttendance,
             icons: <i className="fa-regular fa-calendar"></i>
         },
         {
             title: "Pending Leaves",
-            count: "1",
+            count:  data?.pendingLeaves,
             icons: <i className="fa-regular fa-clipboard"></i>
         },
     ]

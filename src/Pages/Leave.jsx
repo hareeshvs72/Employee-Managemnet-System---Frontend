@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import api from '../services/axios';
 import { useAuth } from '../context/AuthContext';
+import Loading from '../components/Loading';
 
 const Leave = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -23,6 +24,7 @@ const Leave = () => {
     reason: ''
   });
   const { user } = useAuth()
+  const [loading,setLoading]  = useState(false)
   const isAdmin = user?.role === "Admin"
   // console.log(formData);
 
@@ -65,12 +67,17 @@ const Leave = () => {
 
   const handileGetAllLeaves = async () => {
     try {
+      setLoading(true)
       const result = await api.get('/leave')
       setLeaves(result.data.data)
       console.log(result.data);
 
     } catch (error) {
+      setLoading(false)
       console.log(error);
+
+    }finally{
+            setLoading(false)
 
     }
   }
@@ -92,6 +99,7 @@ const Leave = () => {
 
     }
   }
+  if(loading) return <Loading/>
 
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-800">

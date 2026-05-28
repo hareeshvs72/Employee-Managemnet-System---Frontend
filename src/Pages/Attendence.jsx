@@ -9,6 +9,7 @@ import {
   UserCircle
 } from 'lucide-react';
 import api from '../services/axios';
+import Loading from '../components/Loading';
 
 const Attendence = () => {
   const [isClockedIn, setIsClockedIn] = useState(false);
@@ -119,7 +120,7 @@ const handleClockToggle = async () => {
       avgWorkHrs: avg.toFixed(1)
     });
   }, [records]);
-
+if(loading) return <Loading/>
   return (
     <div className="min-h-screen bg-slate-50 p-4 md:p-8 font-sans text-slate-800">
       <div className="max-w-6xl mx-auto">

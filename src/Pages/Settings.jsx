@@ -1,31 +1,67 @@
 import React, { useState } from 'react';
 import { User, Lock, Save, CheckCircle, ChevronRight } from 'lucide-react';
-
+import { useEffect } from 'react';
+import api from '../services/axios'
+import Loading from '../components/Loading';
 const Settings = () => {
   const [formData, setFormData] = useState({
-    name: 'David Musk',
-    email: 'david@example.com',
-    position: 'Software Developer',
-    bio: 'hi'
+    name: '',
+    email: '',
+    position: '',
+    bio: ''
   });
   const [isSaving, setIsSaving] = useState(false);
   const [showToast, setShowToast] = useState(false);
+  const [loading,setLoading] =useState(false)
+console.log(formData);
 
+useEffect(() => {
+  const fetchProfile = async () => {
+    try {
+      setLoading(true)
+      const res = await api.get("/profile");
+ console.log(res);
+ 
+      setFormData({
+        name: res.data.name,
+        email: res.data.email,
+        position: res.data.designation,
+        bio: res.data.bio || ""
+      });
+
+    } catch (err) {
+      setLoading(false)
+      console.error("Profile fetch error", err);
+    }finally{
+      setLoading(false)
+    }
+  };
+
+  fetchProfile();
+}, []);
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSave = () => {
+const handleSave = async () => {
+  try {
     setIsSaving(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsSaving(false);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 3000);
-    }, 800);
-  };
 
+    await api.put(
+      "/profile",{bio:formData.bio}
+    );
+
+    setShowToast(true);
+
+  } catch (err) {
+    console.error("Update failed", err);
+  } finally {
+    setIsSaving(false);
+    setTimeout(() => setShowToast(false), 3000);
+  }
+};
+if(loading) return <Loading/>
   return (
     <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-4xl mx-auto">

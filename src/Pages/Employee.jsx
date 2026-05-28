@@ -16,6 +16,7 @@ import {
 import AddEmployee from '../components/AddEmployee';
 import api from '../services/axios';
 import { useEffect } from 'react';
+import Loading from '../components/Loading';
 
 
 
@@ -84,7 +85,7 @@ const [id,setId] = useState(null)
   }, [searchTerm, selectedDept, employees]);
 
 
-  if(loading) return <p>loading</p>
+  if(loading) return <Loading/>
   if(error) return <p>Failed To Fetch Data</p>
   return (
     <div className="min-h-screen bg-[#F8FAFC] p-4 md:p-8 font-sans">

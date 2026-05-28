@@ -5,6 +5,7 @@ import GeneratePayslip from '../components/GeneratePayslip';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/axios';
 import { Link, useNavigate } from 'react-router-dom';
+import Loading from '../components/Loading';
 
 const Payslip = () => {
   // Mock data representing the payslip history
@@ -15,6 +16,8 @@ const Payslip = () => {
    const {user} = useAuth()
  
   const isAdmin = user.role
+  console.log(isAdmin);
+  
   
   const handileGetAllPaySlip = async () => {
     try {
@@ -44,7 +47,7 @@ const Payslip = () => {
   useEffect(()=>{
     handileGetAllPaySlip()
   },[isOpen])
-
+if(loading) return <Loading/>
   return (
     <div className="min-h-screen bg-slate-50 font-sans text-slate-900">
       
@@ -68,7 +71,7 @@ const Payslip = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50/50 border-b border-slate-100">
-                { isAdmin && <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Employee</th>}
+                { isAdmin === "Admin" && <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Employee</th>}
                   <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Period</th>
                   <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest">Basic Salary</th>
                   <th className="px-6 py-4 text-[11px] font-bold text-slate-400 uppercase tracking-widest text-center md:text-left">Net Salary</th>
@@ -81,7 +84,7 @@ const Payslip = () => {
                     key={slip._id} 
                     className="hover:bg-slate-50/30 transition-colors group"
                   >
-                    {isAdmin && <td className="px-6 py-5 text-sm font-medium text-slate-600">
+                    {isAdmin === "Admin" && <td className="px-6 py-5 text-sm font-medium text-slate-600">
                      {slip.employeeId.firstName}
                     </td>}
                     <td className="px-6 py-5 text-sm font-medium text-slate-600">

@@ -1,21 +1,21 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
-function EmployeeDashbord() {
+function EmployeeDashbord({data}) {
     const cards = [
         {
             title: "Days Present",
-            count: "20",
+            count: data.daysPresent,
             icons: <i className="fa-regular fa-calendar"></i>
         },
         {
             title: "Pending Leaves",
-            count: "1",
+            count: data.pendingLeaves,
             icons: <i className="fa-regular fa-clipboard"></i>
         },
         {
             title: "Latest Payslip",
-            count: "$10",
+            count: data.latestSalary,
             icons: <i className="fa-solid fa-dollar-sign"></i> // ✅ fixed
         },
     ]

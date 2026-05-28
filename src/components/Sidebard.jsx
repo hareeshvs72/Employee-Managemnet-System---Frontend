@@ -4,10 +4,8 @@ import { useAuth } from '../context/AuthContext'
 
 function Sidebard() {
     const {logOut,user} = useAuth()
-    const [userDetails, setUserDetails] = useState({
-        username: "jhon",
-        designation: "employee"
-    })
+   
+   
     const sidebarDetails = [
         { title: "Dashbord", icon: <i class="fa-brands fa-dashcube"></i>, href: "/" },
         user.role !== "Admin" ?
@@ -41,12 +39,12 @@ function Sidebard() {
                 {/* User */}
                 <div className='flex bg-[rgba(29,41,61,1)] items-center p-2 rounded-lg border border-white/10'>
                     <span className='border border-white/10 w-9 h-9 flex items-center justify-center font-bold rounded-md'>
-                        {userDetails.username.charAt(0).toUpperCase()}
+                        {user.name.charAt(0).toUpperCase()}
                     </span>
 
                     <div className='mx-4'>
-                        <h1 className='font-semibold text-sm'>{userDetails.username}</h1>
-                        <p className='opacity-55 text-xs text-green-50'>{userDetails.designation}</p>
+                        <h1 className='font-semibold text-sm'>{user.name}</h1>
+                        <p className='opacity-55 text-xs text-green-50'>{user.designation}</p>
                     </div>
                 </div>
 
