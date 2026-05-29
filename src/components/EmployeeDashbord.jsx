@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-
+ 
 function EmployeeDashbord({data}) {
     const cards = [
         {
@@ -57,7 +57,7 @@ function EmployeeDashbord({data}) {
 
                 {/* Mark Attendance */}
                 <Link
-                    to="/attendance"
+                    to="/attendence"
                     className="flex-1 flex items-center justify-between p-4 rounded-lg transition 
                               
                               bg-[linear-gradient(to_right,rgba(79,57,246,0.6),rgba(79,57,246,1))] 

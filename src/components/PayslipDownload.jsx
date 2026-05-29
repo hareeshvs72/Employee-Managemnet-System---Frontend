@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Printer } from 'lucide-react'; // Optional: for a nice icon
 import { useParams } from 'react-router-dom';
 import api from '../services/axios';
+import Loading from './Loading';
 
 const PayslipDownload = () => {
     const [loading,setLoading] = useState(false)
@@ -39,13 +40,18 @@ const handilePaySlip = async () => {
             setData(data.data)
         }
     } catch (error) {
+      setLoading(false)
         console.log(error);
         
+    }finally{
+            setLoading(false)
+
     }
 }
 useEffect(()=>{
     handilePaySlip()
 },[])
+if(loading) return <Loading/>
   return (
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8 font-sans">
       <div className="max-w-3xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

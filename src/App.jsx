@@ -14,11 +14,13 @@ import Payslip from './Pages/Payslip'
 import Settings from './Pages/Settings'
 import Employee from './Pages/Employee'
 import PayslipDownload from './components/PayslipDownload'
-
+import { PNF } from './Pages/Pnf'
+import { Toaster } from "react-hot-toast";
 function App() {
 
   return (
     <>
+     <Toaster position="top-right" />
       <Routes>
         <Route path='/login' element={<LoginLanding />} />
         <Route path='/Admin' element={<LoginMain />} />
@@ -38,6 +40,8 @@ function App() {
 
 
         </Route>
+                           <Route path='*' element={<PNF />} />
+
 
       </Routes>
     </>

@@ -3,6 +3,7 @@ import { User, Lock, Save, CheckCircle, ChevronRight } from 'lucide-react';
 import { useEffect } from 'react';
 import api from '../services/axios'
 import Loading from '../components/Loading';
+import { Changepassword } from '../components/Changepassword';
 const Settings = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -13,6 +14,7 @@ const Settings = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [loading,setLoading] =useState(false)
+  const [isModal ,setIsModal] =  useState(false)
 console.log(formData);
 
 useEffect(() => {
@@ -165,11 +167,13 @@ if(loading) return <Loading/>
                 <p className="text-sm text-slate-500">Update your account password</p>
               </div>
             </div>
-            <button className="px-5 py-2 border border-slate-200 rounded-lg text-slate-600 font-medium hover:bg-slate-50 active:bg-slate-100 transition-colors">
+            <button onClick={(e)=>{setIsModal(true)}} className="px-5 py-2 border border-slate-200 rounded-lg text-slate-600 font-medium hover:bg-slate-50 active:bg-slate-100 transition-colors">
               Change
             </button>
           </div>
         </div>
+
+        {isModal && <Changepassword  setIsModal={setIsModal} isModal={isModal} />} 
 
         {/* Toast Notification */}
         {showToast && (
