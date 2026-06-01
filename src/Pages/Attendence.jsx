@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import api from '../services/axios';
 import Loading from '../components/Loading';
+import toast from 'react-hot-toast';
 
 const Attendence = () => {
   const [isClockedIn, setIsClockedIn] = useState(false);
@@ -97,6 +98,8 @@ const handleClockToggle = async () => {
 
   } catch (err) {
     console.log(err);
+             toast.error(error?.response?.data?.error)
+
   }
 };
   // ✅ INITIAL LOAD

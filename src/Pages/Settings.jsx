@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import api from '../services/axios'
 import Loading from '../components/Loading';
 import { Changepassword } from '../components/Changepassword';
+import toast from 'react-hot-toast';
 const Settings = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -33,6 +34,8 @@ useEffect(() => {
 
     } catch (err) {
       setLoading(false)
+               toast.error(error?.response?.data?.error)
+
       console.error("Profile fetch error", err);
     }finally{
       setLoading(false)

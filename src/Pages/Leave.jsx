@@ -12,6 +12,7 @@ import {
 import api from '../services/axios';
 import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
+import toast from 'react-hot-toast';
 
 const Leave = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,7 +85,7 @@ const Leave = () => {
 
   useEffect(() => {
     handileGetAllLeaves()
-  }, [updateStatus])
+  }, [updateStatus,isModalOpen])
 
   const handileUpdateLeaveStatus = async (id, status) => {
     try {
@@ -96,6 +97,8 @@ const Leave = () => {
       }
     } catch (error) {
       console.log(error);
+               toast.error(error?.response?.data?.error)
+
 
     }
   }

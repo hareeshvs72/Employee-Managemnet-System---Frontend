@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
 import api from '../services/axios';
+import toast from 'react-hot-toast';
 
 const GeneratePayslip = ({setIsOpen}) => {
   const [formData, setFormData] = useState({
@@ -27,6 +28,8 @@ const [employees,setEmployees] = useState([])
      setIsOpen(false)
   } catch (error) {
     console.log(error);
+             toast.error(error?.response?.data?.error)
+
     setIsOpen(false)
   }
     
@@ -46,6 +49,7 @@ const [employees,setEmployees] = useState([])
       setEmployees(result?.data || [])
     } catch (error) {
       console.log(error);
+         toast.error(error?.response?.data?.error)
 
     } finally {
       setLoading(false)

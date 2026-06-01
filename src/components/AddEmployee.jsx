@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { X, Calendar } from 'lucide-react';
 import api from '../services/axios';
 import { useEffect } from 'react';
+import toast from 'react-hot-toast';
 
 const AddEmployee = ({ setIsOpen , id ,setId,selectedEmployee,setSellectedEmployee}) => {
   const [load, setLoad] = useState(false)
@@ -59,6 +60,8 @@ const AddEmployee = ({ setIsOpen , id ,setId,selectedEmployee,setSellectedEmploy
 
   } catch (error) {
     console.log(error);
+             toast.error(error?.response?.data?.error)
+
   } finally {
     setLoad(false);
   }

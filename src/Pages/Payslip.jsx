@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/axios';
 import { Link, useNavigate } from 'react-router-dom';
 import Loading from '../components/Loading';
+import toast from 'react-hot-toast';
 
 const Payslip = () => {
   // Mock data representing the payslip history
@@ -29,7 +30,8 @@ const Payslip = () => {
 
     } catch (error) {
       console.log(error);
-        
+                 toast.error(error?.response?.data?.error)
+
     }finally{
       setLoading(false)
     }

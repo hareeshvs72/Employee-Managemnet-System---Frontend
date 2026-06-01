@@ -3,9 +3,10 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext';
-
+import {toast} from 'react-hot-toast'
 
 function LoginMain() {
+  
     const navigate = useNavigate()
     const location = useLocation()
     const [error,setError] = useState("")
@@ -27,12 +28,14 @@ function LoginMain() {
     setError("")
     setLoading(true)
     try {
-    const    result =  await login(userLogin)
+    const result =  await login(userLogin)
     console.log(result);
     
         navigate('/')
     } catch (error) {
         console.log(error);
+        console.log(error.response.data.error);
+         toast.error(error?.response?.data?.error)
         
     }
    }

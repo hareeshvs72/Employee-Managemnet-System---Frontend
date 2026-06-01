@@ -61,6 +61,8 @@ const [id,setId] = useState(null)
       setEmployees(result?.data || [])
     } catch (error) {
       console.log(error);
+               toast.error(error?.response?.data?.error)
+
 
     } finally {
       setLoading(false)

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import api from '../services/axios';
+import toast from 'react-hot-toast';
 
 const LockIcon = () => (
   <svg 
@@ -47,7 +48,9 @@ export function Changepassword({ isModal ,setIsModal }) {
   if (!isModal) return null;
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
+          e.preventDefault();
+
+    try {
     setError('');
       
     if (!currentPassword) {
@@ -70,6 +73,10 @@ const reqBoady = {
     setCurrentPassword('');
     setNewPassword('');
     isModal(false)
+    } catch (error) {
+               toast.error(error?.response?.data?.error)
+
+    }
    };
 
   return (
