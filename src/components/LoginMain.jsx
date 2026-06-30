@@ -32,8 +32,8 @@ function LoginMain() {
         });
     } else {
         setUserLogin({
-            email: "employee@example.com",
-            password: "employee123",
+            email: "hareesh@gmail.com",
+            password: "hareesh123",
             role: "employee",
         });
     }
