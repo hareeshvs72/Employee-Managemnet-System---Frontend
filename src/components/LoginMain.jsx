@@ -22,6 +22,22 @@ function LoginMain() {
         role: role
 
     })
+
+    useEffect(() => {
+    if (role === "admin") {
+        setUserLogin({
+            email: "admin@example.com",
+            password: "admin123",
+            role: "admin",
+        });
+    } else {
+        setUserLogin({
+            email: "employee@example.com",
+            password: "employee123",
+            role: "employee",
+        });
+    }
+}, [role]);
     console.log(userLogin);
     const handileSubmit = async (e) => {
         e.preventDefault()
@@ -81,7 +97,10 @@ function LoginMain() {
 
                     <button type='submit' className="w-full mt-3 bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition duration-200">
                         {loading ? (
-                            <span className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                            <>
+                                <span className="inline-block w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+                               
+                            </>
                         ) : (
                             "Sign In"
                         )}
